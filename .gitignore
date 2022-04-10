@@ -7,4 +7,7 @@
 /public/bundles/
 /var/
 /vendor/
+/composer.phar
+/bin/
+/build/
 ###< symfony/framework-bundle ###

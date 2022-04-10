@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}kritek{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="alert alert-info text-center">TEST DEV KRITEK</h1>
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col"> {{ form_row(form.custumer_id) }} </div>
+    </div>
+
+    <h3 class="text-warning">Invoices Lines</h3>
+    <div class="row invoice_lines" data-index="{{ form.invoice_lines|length > 0 ? form.invoice_lines|last.vars.name + 1 : 0 }}"
+    data-prototype="{{ form_widget(form.invoice_lines.vars.prototype)|e('html_attr') }}">
+        {% for invoice in form.invoice_lines %}
+            <div class="col">{{ form_row(invoice.quantity) }}</div>
+            <div class="col">{{ form_row(invoice.amount) }}</div>
+            <div class="col">{{ form_row(invoice.description) }}</div>
+        {% endfor %}
+    </div>
+    <button type="button" class="add_element btn btn-info mt-2 float-end mr-2" 
+        data-collection-holder-class="invoice_lines"> + Add invoice line
+    </button>
+{{ form_end(form) }}
+</div>
+
+<script>            
+    const addInvoiceLineFields = (event) => {
+    const collectionHolder = document.querySelector('.' + event.currentTarget.dataset.collectionHolderClass);
+    console.log(collectionHolder.dataset.index);
+    const item = document.createElement("div");
+
+    item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/,collectionHolder.dataset.index );
+    collectionHolder.appendChild(item);
+    el = document.getElementById('invoice_form_invoice_lines_' + collectionHolder.dataset.index);
+    el.classList.add('row');
+    for (var i = 0; i < el.children.length; i++) {
+        el.children[i].tagName == 'DIV' ? el.children[i].classList.add('col') : el.children[i].tagName
+    }
+    collectionHolder.dataset.index++;
+    };
+    document.querySelectorAll('.add_element').forEach(element => {
+    element.addEventListener("click", addInvoiceLineFields);
+});
+</script>
+{% endblock %}
